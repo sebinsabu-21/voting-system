@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Candidates List</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		body {
+			font-family: system-ui, -apple-system, sans-serif;
+		}
+		.menu-item {
+			transition: all 0.3s ease;
+		}
+		.menu-item:hover {
+			background-color: #f3f4f6;
+		}
+		.candidate-card {
+			transition: all 0.3s ease;
+		}
+		.candidate-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+		}
+		.vote-button {
+			transition: all 0.3s ease;
+		}
+		.vote-button:hover {
+			background-color: #4C3D6F;
+		}
+	</style>
+</head>
+<body class="bg-gray-100 flex">
+	<!-- Sidebar -->
+	<div class="w-64 bg-white shadow-lg">
+		<div class="p-6">
+			<h2 class="text-2xl font-bold text-black mb-8">
+				MENU
+			</h2>
+			<div class="border-b border-black mb-4"></div>
+			<div class="flex items-center mb-4 p-2 menu-item rounded-lg" onclick="window.location.href='dashboard.html';">
+				<img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/acb5deca-d83b-440b-8e01-6fcdb6fad192" class="w-6 h-6 mr-3" />
+				<span class="text-black text-lg">Dashboard</span>
+			</div>
+			<div class="border-b border-black mb-4"></div>
+			<div class="p-2 menu-item rounded-lg cursor-pointer" onclick="window.location.href='candidatelist.html';">
+				<span class="text-black text-lg">Candidates List</span>
+			</div>
+			<div class="border-b border-black mb-4"></div>
+			<div class="p-2 menu-item rounded-lg cursor-pointer" onclick="window.location.href='electionresults.html';">
+				<span class="text-black text-lg">Election Results</span>
+			</div>
+			<div class="border-b border-black mb-4"></div>
+			<div class="flex items-center p-2 menu-item rounded-lg cursor-pointer" onclick="window.location.href='signout.html';">
+				<img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1f916c98-4924-44a3-be82-ba69e3ad3999" class="w-6 h-6 mr-3" />
+				<span class="text-black text-lg">Sign out</span>
+			</div>
+			<div class="border-b border-black"></div>
+		</div>
+	</div>
+
+	<!-- Main Content -->
+	<div class="flex-1 p-8">
+		<h1 class="text-3xl font-bold text-black mb-8 text-center">
+			DEMO ELECTION 2025
+		</h1>
+
+		<!-- Candidate List -->
+		<div id="candidate-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<!-- Candidate cards will be dynamically inserted here -->
+		</div>
+	</div>
+
+	<script>
+		// Function to fetch candidate list from backend
+		async function fetchCandidates() {
+			try {
+				const response = await fetch("http://localhost:3000/candidates");
+				const candidates = await response.json();
+				renderCandidates(candidates);
+			} catch (error) {
+				console.error("Error fetching candidates:", error);
+			}
+		}
+
+		// Function to render candidates dynamically
+		function renderCandidates(candidates) {
+			const candidateList = document.getElementById("candidate-list");
+			candidateList.innerHTML = candidates.map((candidate, index) => `
+				<div class="candidate-card bg-white rounded-3xl shadow-lg p-6 text-center">
+					<img src="${candidate.image || 'https://via.placeholder.com/150'}" alt="${candidate.name}" class="w-32 h-32 mx-auto rounded-full mb-4" />
+					<h3 class="text-xl font-bold text-black mb-2">${candidate.name}</h3>
+					<p class="text-gray-700 text-sm mb-4">Votes: ${candidate.votes}</p>
+					<button class="vote-button bg-[#65558F] text-white py-2 px-6 rounded-full font-bold hover:bg-[#4C3D6F] focus:outline-none" onclick="vote(${candidate.id})" id="vote-btn-${index}">
+						Vote
+					</button>
+				</div>
+			`).join('');
+		}
+
+		// Function to get the voter address from MetaMask
+		async function getVoterAddress() {
+			if (typeof window.ethereum !== "undefined") {
+				try {
+					// Request accounts if not already connected
+					const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+					return accounts[0];
+				} catch (error) {
+					console.error("Error connecting to MetaMask:", error);
+					alert("Please connect MetaMask to vote.");
+					return null;
+				}
+			} else {
+				alert("MetaMask is not installed. Please install MetaMask to vote.");
+				return null;
+			}
+		}
+
+		// Function to handle voting
+		async function vote(candidateId) {
+			// Retrieve the voter's Ethereum address from MetaMask
+			const voterAddress = await getVoterAddress();
+			if (!voterAddress) return;
+
+			try {
+				// Send POST request to backend to cast the vote
+				const response = await fetch("http://localhost:3000/vote", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({ voterAddress, candidateId })
+				});
+				const result = await response.json();
+				if (result.success) {
+					alert("Vote cast successfully!");
+					// Refresh candidate list to update vote counts
+					fetchCandidates();
+					// Disable all vote buttons so the user can vote only once
+					disableVoteButtons();
+				} else {
+					alert("Error: " + result.message);
+				}
+			} catch (error) {
+				console.error("Error casting vote:", error);
+				alert("Error casting vote, please try again.");
+			}
+		}
+
+		// Function to disable all vote buttons after voting
+		function disableVoteButtons() {
+			const buttons = document.querySelectorAll(".vote-button");
+			buttons.forEach(button => {
+				button.disabled = true;
+				button.classList.add("opacity-50", "cursor-not-allowed");
+			});
+		}
+
+		// Fetch and render candidates when the page loads
+		window.onload = fetchCandidates;
+	</script>
+</body>
+</html>

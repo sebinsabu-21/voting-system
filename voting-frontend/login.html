@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login Page with MetaMask</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Your styles here */
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="flex flex-col items-center w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden">
+    <!-- Header Section -->
+    <div class="w-full bg-[#A487DFB0] py-8 text-center">
+      <h1 class="text-4xl font-bold text-black">
+        COLLEGE BLOCKCHAIN VOTING WEBSITE
+      </h1>
+    </div>
+    <!-- Login Form Section -->
+    <div class="w-full bg-white bg-opacity-80 p-12">
+      <h2 class="text-2xl font-bold text-center text-black mb-8">LOGIN</h2>
+
+      <!-- Email Input -->
+      <div class="mb-6">
+        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+          Email Address
+        </label>
+        <input
+          type="email"
+          id="email"
+          placeholder="Enter your email address"
+          class="w-full px-4 py-3 rounded-lg border border-gray-300"
+        />
+      </div>
+
+      <!-- Password Input -->
+      <div class="mb-6">
+        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter your password"
+          class="w-full px-4 py-3 rounded-lg border border-gray-300"
+        />
+      </div>
+
+      <!-- MetaMask Connection Button -->
+      <button id="connect-metamask-btn" class="w-full bg-[#65558F] text-white py-3 rounded-full font-bold mb-4">
+        Connect MetaMask
+      </button>
+
+      <!-- Login Button -->
+      <button id="login-btn" class="w-full bg-[#65558F] text-white py-3 rounded-full font-bold">
+        Login
+      </button>
+
+      <!-- Register Link -->
+      <div class="text-center mt-6">
+        <p class="text-sm font-bold text-gray-700">
+          Don't have an account?
+          <a href="register.html" class="text-[#65558F] hover:underline">Register</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase and MetaMask Integration Script -->
+  <script type="module">
+    // Import Firebase SDK (keep your Firebase authentication as is)
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHFsm9y6-lCtuZjuGkrUwhTAxB9xQcWXA",
+      authDomain: "votingsystem-35f92.firebaseapp.com",
+      projectId: "votingsystem-35f92",
+      storageBucket: "votingsystem-35f92.appspot.com",
+      messagingSenderId: "19534677184",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let userEthAddress = null; // Will store MetaMask account address
+
+    // Connect MetaMask when user clicks the button
+    document.getElementById("connect-metamask-btn").addEventListener("click", async () => {
+      if (window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+          userEthAddress = accounts[0];
+          alert("MetaMask connected: " + userEthAddress);
+          // Optionally, store in localStorage if needed:
+          localStorage.setItem("ethAddress", userEthAddress);
+        } catch (error) {
+          alert("MetaMask connection failed: " + error.message);
+        }
+      } else {
+        alert("Please install MetaMask to connect your wallet.");
+      }
+    });
+
+    // Login Function with Firebase
+    document.getElementById("login-btn").addEventListener("click", async () => {
+      let email = document.getElementById("email").value;
+      let password = document.getElementById("password").value;
+
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        if (userCredential.user.emailVerified) {
+          // Check if MetaMask is connected
+          if (!userEthAddress) {
+            alert("Please connect MetaMask before logging in.");
+            return;
+          }
+          // Continue with login and redirect to dashboard
+          alert("Login successful! Redirecting...");
+          window.location.href = "dashboard.html";
+        } else {
+          alert("Please verify your email before logging in.");
+        }
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+  </script>
+</body>
+</html>

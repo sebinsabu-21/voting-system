@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidates List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .menu-item {
+      transition: all 0.3s ease;
+    }
+    .menu-item:hover {
+      background-color: #f3f4f6;
+    }
+    .candidate-card {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .candidate-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 flex">
+  <!-- Sidebar -->
+  <div class="w-64 bg-white shadow-lg fixed h-full">
+    <div class="p-6">
+      <div class="flex justify-between items-center mb-8">
+        <h2 class="text-2xl font-bold text-black">MENU</h2>
+        <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/37668d27-8a15-4aae-9eea-7ade3454a329" class="w-6 h-6"/>
+      </div>
+      <div class="space-y-4">
+        <a href="dashboard.html" class="block">
+          <div class="flex items-center p-2 menu-item rounded-lg">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/de0e216c-75a1-4231-9b45-7c5c06086070" class="w-8 h-8 mr-3"/>
+            <span class="text-lg">Dashboard</span>
+          </div>
+        </a>
+        <div class="border-t border-gray-300"></div>
+        <div class="p-2 menu-item rounded-lg bg-white">
+          <span class="text-lg">Candidates List</span>
+        </div>
+        <div class="border-t border-gray-300"></div>
+        <a href="electionresult.html" class="block">
+          <div class="flex items-center p-2 menu-item rounded-lg">
+            <span class="text-lg">Election Results</span>
+          </div>
+        </a>
+        <div class="border-t border-gray-300"></div>
+        <a href="signout.html" class="block">
+          <div class="flex items-center p-2 menu-item rounded-lg">
+            <img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/f480c8a2-88ee-4db2-89e7-2d4b7a93dd98" class="w-6 h-6 mr-3"/>
+            <span class="text-lg">Sign out</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex-1 p-8 ml-64">
+    <h1 class="text-3xl font-bold text-center mb-8">CANDIDATES LIST</h1>
+    
+    <!-- Candidate Cards Container -->
+    <div id="candidate-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <!-- Candidate cards will be dynamically inserted here -->
+    </div>
+
+    <!-- Refresh Button -->
+    <div class="flex justify-center mt-8">
+      <button class="bg-purple-600 text-white py-2 px-6 rounded-lg hover:bg-purple-700 transition" onclick="fetchCandidates()">
+        Refresh List
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Function to fetch candidate list from backend
+    async function fetchCandidates() {
+      try {
+        const response = await fetch("http://localhost:3000/candidates");
+        const candidates = await response.json();
+        renderCandidates(candidates);
+      } catch (error) {
+        console.error("Error fetching candidates:", error);
+        alert("Error fetching candidates. Please try again.");
+      }
+    }
+
+    // Function to render candidate cards
+    function renderCandidates(candidates) {
+      const candidateListContainer = document.getElementById("candidate-list");
+      candidateListContainer.innerHTML = "";
+      if (candidates.length === 0) {
+        candidateListContainer.innerHTML = "<p class='text-center col-span-full'>No candidates available.</p>";
+        return;
+      }
+      candidates.forEach(candidate => {
+        // Create card element
+        const card = document.createElement("div");
+        card.className = "candidate-card bg-white rounded-2xl p-6";
+        
+        // Candidate image
+        const image = document.createElement("img");
+        image.src = candidate.image || "https://via.placeholder.com/150";
+        image.alt = candidate.name;
+        image.className = "w-full h-40 object-cover rounded-xl mb-4";
+        
+        // Candidate name
+        const name = document.createElement("h3");
+        name.className = "text-xl font-bold mb-2";
+        name.textContent = candidate.name;
+        
+        // Candidate party (if available)
+        const party = document.createElement("p");
+        party.className = "text-gray-600 mb-4";
+        party.textContent = candidate.party ? candidate.party : "Political Party: N/A";
+        
+        // Candidate votes (if available)
+        const votes = document.createElement("p");
+        votes.className = "text-gray-600";
+        votes.textContent = "Votes: " + (candidate.votes !== undefined ? candidate.votes : "0");
+
+        // Append elements to card
+        card.appendChild(image);
+        card.appendChild(name);
+        card.appendChild(party);
+        card.appendChild(votes);
+
+        // Append card to container
+        candidateListContainer.appendChild(card);
+      });
+    }
+
+    // Fetch candidate list on page load
+    window.onload = fetchCandidates;
+  </script>
+</body>
+</html>

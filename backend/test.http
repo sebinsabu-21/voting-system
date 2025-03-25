@@ -1,0 +1,8 @@
+### Add Candidate
+POST http://localhost:3000/addCandidate
+Content-Type: application/json
+
+{
+  "candidateName": "Sankarnath C.H"
+}
+

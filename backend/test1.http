@@ -1,0 +1,6 @@
+POST http://localhost:3000/removeCandidate
+Content-Type: application/json
+
+{
+  "candidateId": 2
+}

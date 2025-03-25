@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Election Results</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		body {
+			font-family: system-ui, -apple-system, sans-serif;
+		}
+		.menu-item {
+			transition: all 0.3s ease;
+		}
+		.menu-item:hover {
+			background-color: #f3f4f6;
+		}
+		.result-card {
+			transition: all 0.3s ease;
+		}
+		.result-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+		}
+	</style>
+</head>
+<body class="bg-gray-100 flex">
+	<!-- Sidebar -->
+	<div class="w-64 bg-white shadow-lg">
+		<div class="p-6">
+			<h2 class="text-2xl font-bold text-black mb-8">
+				MENU
+			</h2>
+			<div class="border-b border-black mb-4"></div>
+			<div class="flex items-center mb-4 p-2 menu-item rounded-lg" onclick="window.location.href='dashboard.html';">
+				<img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/acb5deca-d83b-440b-8e01-6fcdb6fad192" class="w-6 h-6 mr-3" />
+				<span class="text-black text-lg">Dashboard</span>
+			</div>
+			<div class="border-b border-black mb-4"></div>
+			<div class="p-2 menu-item rounded-lg cursor-pointer" onclick="window.location.href='candidatelist.html';">
+				<span class="text-black text-lg">Candidates List</span>
+			</div>
+			<div class="border-b border-black mb-4"></div>
+			<div class="p-2 menu-item rounded-lg cursor-pointer" onclick="window.location.href='electionresults.html';">
+				<span class="text-black text-lg">Election Results</span>
+			</div>
+			<div class="border-b border-black mb-4"></div>
+			<div class="flex items-center p-2 menu-item rounded-lg cursor-pointer" onclick="window.location.href='signout.html';">
+				<img src="https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/1f916c98-4924-44a3-be82-ba69e3ad3999" class="w-6 h-6 mr-3" />
+				<span class="text-black text-lg">Sign out</span>
+			</div>
+			<div class="border-b border-black"></div>
+		</div>
+	</div>
+
+	<!-- Main Content -->
+	<div class="flex-1 p-8">
+		<h1 class="text-3xl font-bold text-black mb-8 text-center">
+			Election Results
+		</h1>
+		
+		<!-- Results Container -->
+		<div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			<!-- Dynamic result cards will be inserted here -->
+		</div>
+
+		<!-- Refresh Button -->
+		<div class="flex justify-center mt-8">
+			<button class="bg-[#65558F] text-white py-2 px-6 rounded-full font-bold hover:bg-[#4C3D6F] focus:outline-none" onclick="window.location.reload();">
+				Refresh Results
+			</button>
+		</div>
+	</div>
+
+	<script>
+		// Fetch the latest candidate results from the backend
+		async function fetchResults() {
+			try {
+				const response = await fetch("http://localhost:3000/candidates");
+				const candidates = await response.json();
+				renderResults(candidates);
+			} catch (error) {
+				console.error("Error fetching results:", error);
+				alert("Error fetching election results. Please try again.");
+			}
+		}
+
+		// Render the candidate cards with their latest vote counts
+		function renderResults(candidates) {
+			const container = document.getElementById("results-container");
+			container.innerHTML = candidates.map(candidate => `
+				<div class="result-card bg-white rounded-3xl shadow-lg p-6 text-center">
+					<h3 class="text-xl font-bold text-black mb-2">${candidate.name}</h3>
+					<p class="text-gray-700 text-sm mb-4">Votes: ${candidate.votes}</p>
+				</div>
+			`).join('');
+		}
+
+		// Fetch results when the page loads
+		window.onload = fetchResults;
+	</script>
+</body>
+</html>
