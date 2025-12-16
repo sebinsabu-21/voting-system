@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Enrollment - Voter Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="portal-card">
+            <h1 class="portal-heading">Face Enrollment</h1>
+            
+            <div class="form-section">
+                <!-- Permission Request Section (shown initially) -->
+                <div id="permissionRequest" class="permission-request">
+                    <div class="permission-icon">📷</div>
+                    <h3>Camera Permission Required</h3>
+                    <p>We need access to your camera to enroll your face for secure authentication.</p>
+                    <p class="permission-note">Your privacy is important to us. We only use your camera to create a secure face identifier. No video or images are stored.</p>
+                    
+                    <div class="button-group" style="margin-top: 30px;">
+                        <button id="allowBtn" class="btn btn-primary">Allow Camera Access</button>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="denyBtn" class="btn btn-outline">Deny</button>
+                    </div>
+                </div>
+                
+                <!-- Face Enrollment Section (shown after permission granted) -->
+                <div id="faceEnrollment" style="display: none;">
+                    <div class="face-info">
+                        <p>Please position your face in the center of the camera view.</p>
+                        <p class="face-instructions">Make sure there's good lighting and your face is clearly visible.</p>
+                    </div>
+                    
+                    <div class="video-container">
+                        <video id="video" width="400" height="300" autoplay muted playsinline></video>
+                        <canvas id="canvas" style="display: none;"></canvas>
+                    </div>
+                    
+                    <div class="face-status" id="faceStatus">
+                        <p>Initializing camera...</p>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="captureBtn" class="btn btn-primary" disabled>Capture Face</button>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="skipBtn" class="btn btn-outline">Skip Face Enrollment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- face-api.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="face-enroll.js"></script>
+</body>
+</html>
