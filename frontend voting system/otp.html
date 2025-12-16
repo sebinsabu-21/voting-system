@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - Voter Portal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="portal-card">
+            <h1 class="portal-heading">OTP Verification</h1>
+            
+            <div class="form-section">
+                <div class="otp-info">
+                    <p>Please enter the 6-digit OTP sent to your phone number.</p>
+                </div>
+                
+                <div class="input-group">
+                    <label for="otp">Enter OTP:</label>
+                    <input type="text" id="otp" name="otp" placeholder="Enter 6-digit OTP" maxlength="6">
+                </div>
+                
+                <div class="button-group">
+                    <button id="verifyOtpBtn" class="btn btn-primary">Verify OTP</button>
+                </div>
+                
+                <div class="button-group">
+                    <button id="submitBtn" class="btn btn-success">Submit</button>
+                </div>
+                
+                <div class="button-group">
+                    <button id="resendOtpBtn" class="btn btn-secondary">Resend OTP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script src="otp-script.js"></script>
+</body>
+</html>
