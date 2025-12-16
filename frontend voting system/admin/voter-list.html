@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voter List</title>
+    <style>
+        :root { --bg: #0f172a; --text: #e5e7eb; --muted: #9ca3af; --accent: #2563eb; --accent-hover: #1d4ed8; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; min-height: 100vh; color: var(--text);
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            background: radial-gradient(1000px 600px at 10% 10%, #0b1220 20%, transparent 60%),
+                        radial-gradient(800px 500px at 90% 20%, #0b1020 10%, transparent 60%), var(--bg);
+            display: grid; place-items: center; padding: 24px;
+        }
+        .container { width: 100%; max-width: 980px; }
+        header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+        h1 { margin: 0; font-size: 28px; letter-spacing: 0.4px; }
+        a.btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 14px; border-radius: 10px; text-decoration: none; color: white; background: linear-gradient(180deg, var(--accent), var(--accent-hover)); box-shadow: 0 8px 20px rgba(37,99,235,0.35); }
+        a.btn:hover { filter: brightness(1.05); }
+        a.btn:active { transform: translateY(1px); }
+        .footer { margin-top: 24px; text-align: center; font-size: 12px; color: var(--muted); }
+        .card { background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04); backdrop-filter: blur(8px); }
+        .table-wrap { overflow: auto; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); }
+        table { width: 100%; border-collapse: collapse; min-width: 560px; }
+        thead th { text-align: left; font-weight: 700; color: #cbd5e1; background: rgba(255,255,255,0.04); }
+        th, td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Voter List</h1>
+            <a href="dashboard.html" class="btn">Back to Dashboard</a>
+        </header>
+
+        <div class="card">
+            <div class="table-wrap">
+                <table aria-label="Voter List">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Election ID</th>
+                            <th>Phone No</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Aliya Sharma</td>
+                            <td>ELC-10234</td>
+                            <td>+91 98765 43210</td>
+                            <td>aliya.sharma@email.com</td>
+                        </tr>
+                        <tr>
+                            <td>Rahul Mehta</td>
+                            <td>ELC-10235</td>
+                            <td>+91 91234 56780</td>
+                            <td>rahul.mehta@email.com</td>
+                        </tr>
+                        <tr>
+                            <td>Neha Verma</td>
+                            <td>ELC-10236</td>
+                            <td>+91 98123 45678</td>
+                            <td>neha.verma@email.com</td>
+                        </tr>
+                        <tr>
+                            <td>Arjun Singh</td>
+                            <td>ELC-10237</td>
+                            <td>+91 90012 34567</td>
+                            <td>arjun.singh@email.com</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">© <span id="year"></span> Admin Portal</div>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #111827;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            color: var(--text);
+            background: radial-gradient(1000px 600px at 10% 10%, #0b1220 20%, transparent 60%),
+                        radial-gradient(800px 500px at 90% 20%, #0b1020 10%, transparent 60%),
+                        var(--bg);
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 980px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        h1 { margin: 0; font-size: 28px; letter-spacing: 0.4px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 640px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 1024px) {
+            .grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+            backdrop-filter: blur(8px);
+            min-height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 14px 16px;
+            color: white;
+            font-weight: 600;
+            background: linear-gradient(180deg, var(--accent), var(--accent-hover));
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.06s ease, filter 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+        }
+
+        .btn-small {
+            width: auto;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .btn:hover { filter: brightness(1.05); }
+        .btn:active { transform: translateY(1px); }
+
+        nav { margin-top: 8px; }
+
+        .footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Dashboard</h1>
+            <a href="index.html" class="btn btn-small">Logout</a>
+        </header>
+
+        <div class="grid">
+            <div class="card"><a class="btn" href="voter-list.html" id="voters-list">Voters List</a></div>
+            <div class="card"><a class="btn" href="candidate-list.html" id="candidate-list">Candidate List</a></div>
+            <div class="card"><a class="btn" href="schedule-election.html" id="schedule-election">Schedule Election</a></div>
+            <div class="card"><a class="btn" href="#" id="election-progress">Election Progress</a></div>
+            <div class="card"><a class="btn" href="#" id="results">Results</a></div>
+        </div>
+
+        <div class="footer">© <span id="year"></span> Admin Portal</div>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
+
+
